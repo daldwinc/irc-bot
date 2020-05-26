@@ -1,7 +1,0 @@
-{
-	"server": "test2.server.com",
-	"channel": "#testchannel",
-	"botnick": "yourbotsnick",
-	"adminname": "yourircnick",
-	"exitcode": "word"
-}
