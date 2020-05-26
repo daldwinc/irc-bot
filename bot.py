@@ -11,14 +11,14 @@ import time
 ircsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 #load config
-with open('config.json', 'r') as f:
+with open('irc.json', 'r') as f:
     config = json.load(f)
 
 server = config['server']
 channel = config['channel']
 botnick = config['botnick']
 adminname = config['adminname']
-exitcode = config['exitcode']
+exitcode = config['exitcode'] + botnick
 
 ircsock.connect((server, 6667)) # Here we connect to the server using the port 6667
 ircsock.send(bytes("USER "+ botnick +" "+ botnick +" "+ botnick + " " + botnick + "\n", "UTF-8")) # user information

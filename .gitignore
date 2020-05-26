@@ -1,4 +1,2 @@
-#dont push these files to git
-
 *.swp
 irc.json
