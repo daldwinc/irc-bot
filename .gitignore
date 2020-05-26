@@ -1,0 +1,4 @@
+#dont push these files to git
+
+*.swp
+config.json

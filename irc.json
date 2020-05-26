@@ -1,5 +1,5 @@
 {
-	"server": "server.fqdn.here",
+	"server": "test.server.com",
 	"channel": "#testchannel",
 	"botnick": "yourbotsnick",
 	"adminname": "yourircnick",
