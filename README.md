@@ -3,11 +3,14 @@
  Feel free to share/edit/whatever! Just please credit Linux Academy as the source if copying!
 
 Before you begin:
-	`apt install python-pip`
-	`pip install requests`
+```	
+apt install python-pip
+pip install requests
+```
 
 Create config file in bot directory:
-- replace parameters with real values
+
+*replace parameters with real values
 
 ```
 touch irc.json
