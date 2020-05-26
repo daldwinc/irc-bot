@@ -1,0 +1,7 @@
+{
+	"server": "server.fqdn.here",
+	"channel": "#testchannel",
+	"botnick": "yourbotsnick",
+	"adminname": "yourircnick",
+	"exitcode": "word"
+}
