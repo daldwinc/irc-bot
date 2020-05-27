@@ -21,7 +21,7 @@ adminname = config['adminname']
 exitcode = config['exitcode'] + botnick
 
 ircsock.connect((server, 6667)) # Here we connect to the server using the port 6667
-ircsock.send(bytes("USER "+ botnick +" "+ botnick +" "+ botnick + " " + botnick + "\n", "UTF-8")) # user information
+ircsock.send(bytes("USER "+ botnick +" "+ botnick +" "+ botnick +" "+ botnick +"\n", "UTF-8")) # user information
 ircsock.send(bytes("NICK "+ botnick +"\n", "UTF-8")) # assign the nick to the bot
 
 #API setup
@@ -31,7 +31,9 @@ blockchair_headers = {'Content-Type': 'application/json'}
 #blockchain API
 blockchain_base = 'https://blockchain.info/'
 blockchain_headers = {'Content-Type': 'application/json'}
-
+#exchangeratesapi.io API
+exchangerates_base = 'https://api.exchangeratesapi.io/'
+exchangerates_headers = {'Content-Type': 'application/json'}
 
 #irc functions
 def joinchan(chan): # join channel(s).
@@ -51,6 +53,12 @@ def ping(): # respond to server Pings.
 def sendmsg(msg, target=channel): # sends messages to the target.
   ircsock.send(bytes("PRIVMSG "+ target +" :"+ msg +"\n", "UTF-8"))
 
+def senderror(err=None):
+    sendmsg("Something went wrong. See !help")
+    if err is not None:
+        print(f"[!] Command failed. {err}")
+    else:
+        print("[!] Command failed.")
 
 #trigger functions
 def tslb():
@@ -65,10 +73,25 @@ def tslb():
             seconds_to_time = str(datetime.timedelta(seconds=time_diff))
             sendmsg("Time elapsed since last block: " + seconds_to_time)
         else:
-            print('[!] Command failed.')
+            senderror()
     else:
-        print('[!] Command failed.')
+        senderror()
 
+def fx(cur1,cur2,amt):
+    try:
+        api_url = ('{0}latest?base=' + cur1).format(exchangerates_base)
+        r = requests.get(api_url, headers=exchangerates_headers)
+        if r.status_code == 200:
+            d = json.loads(r.content.decode('UTF-8'))
+            if d is not None:
+                converted = float(d['rates'][cur2]) * float(amt)
+                sendmsg("At a rate of " + '${:,.2f}'.format(d['rates'][cur2]) + " the converted amount is " +  '${:,.2f}'.format(converted))
+            else:
+               senderror() 
+        else:
+            senderror()
+    except Exception as e:
+        senderror(e)
 
 def main():
   login()
@@ -88,11 +111,12 @@ def main():
 
         if message[:5].find('!help') != -1:
           sendmsg("Command List:", name)
-          sendmsg('!help      - Show this list', name)
-          sendmsg('!tslb       - Print time of last block', name)
-          sendmsg('!losers    - Print names of idiots to channel', name)
-          sendmsg('!join    - attempt to channel', name)
-        
+          sendmsg("!fx <from_currency> <to_currency> <amount>           - Converts from one currency to another", name)
+          sendmsg('!help                                                - Show this list', name)
+          sendmsg('!tslb                                                - Print time of last block', name)
+          sendmsg('!losers                                              - Print names of idiots to channel', name)
+          sendmsg('!join                                                - attempt to channel', name)
+
         if message[:7].find('!join') != -1:
           joinchan(channel)
 
@@ -101,6 +125,15 @@ def main():
 
         if message[:5].find('!tslb') != -1:
           tslb()
+
+        if message[:3].find('!fx') != -1:
+            try:
+                from_cur = ircmsg.split('PRIVMSG',1)[1].split(':',1)[1].split(' ',3)[1].upper()
+                to_cur = ircmsg.split('PRIVMSG',1)[1].split(':',1)[1].split(' ',3)[2].upper()
+                amount = ircmsg.split('PRIVMSG',1)[1].split(':',1)[1].split(' ',3)[3]
+                fx(from_cur,to_cur,amount)
+            except Exception as e:
+                senderror(e)
 
       # Commands end
       ##################################################################
