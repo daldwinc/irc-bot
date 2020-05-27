@@ -17,6 +17,7 @@ with open('irc.json', 'r') as f:
 server = config['server']
 channel = config['channel']
 botnick = config['botnick']
+botpass = config['botpass']
 adminname = config['adminname']
 exitcode = config['exitcode'] + botnick
 
@@ -45,7 +46,7 @@ def joinchan(chan): # join channel(s).
     print(ircmsg)
 
 def login():
-  ircsock.send(bytes("PRIVMSG "+ "NickServ" +" :"+ "IDENTIFY thebotpassword" +"\n", "UTF-8"))
+  ircsock.send(bytes("PRIVMSG "+ "NickServ" +" :"+ "IDENTIFY "+ botpass +"\n", "UTF-8"))
 
 def ping(): # respond to server Pings.
     ircsock.send(bytes("PONG :pingis\n", "UTF-8"))
