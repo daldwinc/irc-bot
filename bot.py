@@ -53,7 +53,7 @@ def ping(): # respond to server Pings.
 def sendmsg(msg, target=channel): # sends messages to the target.
   ircsock.send(bytes("PRIVMSG "+ target +" :"+ msg +"\n", "UTF-8"))
 
-def senderror(err):
+def senderror(err=None):
     sendmsg("Something went wrong. See !help")
     if err is not None:
         print(f"[!] Command failed. {err}")
