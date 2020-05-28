@@ -112,11 +112,21 @@ def cycle():
     if r.status_code == 200:
         d = json.loads(r.content.decode('UTF-8'))
         if d is not None:
-            try:
-                delta = (float(d['last']) - float(cycle_high)) / float(cycle_high) * 100
-                sendmsg("The change from the cycle high is " + str(delta) + "%")
-            except Exception as e:
-                senderror(e)
+            api_url = '{0}pricefeed'.format(gemini_base)
+            r = requests.get(api_url, headers=gemini_headers)
+            if r.status_code == 200:
+                d2 = json.loads(r.content.decode('UTF-8'))
+                if d2 is not None:
+                    try:
+                        delta = (float(d['last']) - float(cycle_high)) / float(cycle_high) * 100
+                        percentChange24h = float(next(i["percentChange24h"] for i in d2 if i["pair"] == "BTCUSD")) * 100
+                        sendmsg("BTC [GEMINI] -> "+ '${:,.2f}'.format(float(d['last'])) + " | Cycle high: " + '${:,.2f}'.format(float(cycle_high)) + " | Delta: " + '{:,.2f}%'.format(float(delta)) + " | Daily Change: " + '{:,.2f}%'.format(float(percentChange24h)))
+                    except Exception as e:
+                        senderror(e)
+                else:
+                    senderror()
+            else:
+                senderror()
         else:
             senderror()
     else:
