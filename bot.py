@@ -107,30 +107,18 @@ def fx(cur1,cur2,amt):
         senderror(e)
 
 def cycle():
-    api_url = '{0}pubticker/btcusd'.format(gemini_base)
-    r = requests.get(api_url, headers=gemini_headers)
-    if r.status_code == 200:
-        d = json.loads(r.content.decode('UTF-8'))
-        if d is not None:
-            api_url = '{0}pricefeed'.format(gemini_base)
-            r = requests.get(api_url, headers=gemini_headers)
-            if r.status_code == 200:
-                d2 = json.loads(r.content.decode('UTF-8'))
-                if d2 is not None:
-                    try:
-                        delta = (float(d['last']) - float(cycle_high)) / float(cycle_high) * 100
-                        percentChange24h = float(next(i["percentChange24h"] for i in d2 if i["pair"] == "BTCUSD")) * 100
-                        sendmsg("BTC [GEMINI] -> "+ '${:,.2f}'.format(float(d['last'])) + " | Cycle high: " + '${:,.2f}'.format(float(cycle_high)) + " | Delta: " + '{:,.2f}%'.format(float(delta)) + " | Daily Change: " + '{:,.2f}%'.format(float(percentChange24h)))
-                    except Exception as e:
-                        senderror(e)
-                else:
-                    senderror()
-            else:
-                senderror()
-        else:
-            senderror()
-    else:
-        senderror()
+    try:
+        ticker = requests.get(f'{gemini_base}pubticker/btcusd')
+        ticker.raise_for_status()
+	
+        pricefeed = requests.get(f'{gemini_base}pricefeed')
+        pricefeed.raise_for_status()
+	
+        delta = (float(ticker.json()['last']) - float(cycle_high)) / float(cycle_high) * 100
+        percentChange24h = float(next(i["percentChange24h"] for i in pricefeed.json() if i["pair"] == "BTCUSD")) * 100
+        sendmsg(f'BTC [GEMINI] -> ${float(ticker.json()["last"]):,.2f} | Cycle high: ${float(cycle_high):,.2f} | Delta: {delta:,.2f}% | Daily Change: {percentChange24h:,.2f}%')
+    except Exception as e:
+        senderror(str(e))
 
 def main():
   login()
