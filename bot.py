@@ -149,7 +149,7 @@ def main():
 
         if message[:5].find('!help') != -1:
           sendmsg("Command List:", name)
-          sendmsg("!cycle                                               - Shows the difference in price from the last high", name)
+          sendmsg("!c                                                   - Show change from last high, daily change", name)
           sendmsg("!fx <from_currency> <to_currency> <amount>           - Converts from one currency to another", name)
           sendmsg('!help                                                - Show this list', name)
           sendmsg('!tslb                                                - Print time of last block', name)
@@ -174,7 +174,7 @@ def main():
             except Exception as e:
                 senderror(e)
 
-        if message[:6].find('!cycle') != -1:
+        if message[:2].find('!c') != -1:
             cycle()
 
       # Commands end
