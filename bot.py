@@ -126,7 +126,7 @@ def cycle():
         ch_color = red if delta < 0 else green
         pc24_color = red if percentChange24h < 0 else green
 
-        sendmsg(f'BTC [GEMINI] -> ${float(ticker.json()["last"]):,.2f} | Cycle high: ${float(cycle_high):,.2f} | Delta: {ch_color}{delta:,.2f}%{reset} | Daily Change: {pc24_color}{percentChange24h:,.2f}%{reset}')
+        sendmsg(f'BTC [GEMINI] -> ${float(ticker.json()["last"]):,.2f} | Cycle high: ${float(cycle_high):,.2f} | Delta: {ch_color}{delta:,.2f}%{reset} | Last 24H: {pc24_color}{percentChange24h:,.2f}%{reset}')
 
     except Exception as e:
         senderror(str(e))
