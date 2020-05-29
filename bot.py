@@ -44,9 +44,7 @@ blockchain_headers = {'Content-Type': 'application/json'}
 exchangerates_base = 'https://api.exchangeratesapi.io/'
 exchangerates_headers = {'Content-Type': 'application/json'}
 
-#gemini API
-gemini_base = 'https://api.gemini.com/v1/'
-gemini_headers = {'Content-Type': 'application/json'}
+gemini_base = 'https://api.gemini.com/v1/' #gemini API
 
 #irc functions
 def joinchan(chan): # join channel(s).
@@ -117,6 +115,7 @@ def cycle():
         delta = (float(ticker.json()['last']) - float(cycle_high)) / float(cycle_high) * 100
         percentChange24h = float(next(i["percentChange24h"] for i in pricefeed.json() if i["pair"] == "BTCUSD")) * 100
         sendmsg(f'BTC [GEMINI] -> ${float(ticker.json()["last"]):,.2f} | Cycle high: ${float(cycle_high):,.2f} | Delta: {delta:,.2f}% | Daily Change: {percentChange24h:,.2f}%')
+
     except Exception as e:
         senderror(str(e))
 
