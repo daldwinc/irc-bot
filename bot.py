@@ -21,6 +21,20 @@ botpass = config['botpass']
 adminname = config['adminname']
 exitcode = config['exitcode'] + botnick
 
+with open('cycle.json', 'r') as f:
+    config = json.load(f)
+
+cycle_high = config['cycle_high']
+start_2020 = config['start_2020']
+
+
+reset = "\x03"
+green = "\x0303"
+red = "\x034"
+yellow = "\x038"
+white = "\x0300"
+
+
 ircsock.connect((server, 6667)) # Here we connect to the server using the port 6667
 ircsock.send(bytes("USER "+ botnick +" "+ botnick +" "+ botnick +" "+ botnick +"\n", "UTF-8")) # user information
 ircsock.send(bytes("NICK "+ botnick +"\n", "UTF-8")) # assign the nick to the bot
@@ -29,12 +43,16 @@ ircsock.send(bytes("NICK "+ botnick +"\n", "UTF-8")) # assign the nick to the bo
 #blockchair API
 blockchair_base = 'https://api.blockchair.com/bitcoin/'
 blockchair_headers = {'Content-Type': 'application/json'}
+
 #blockchain API
 blockchain_base = 'https://blockchain.info/'
 blockchain_headers = {'Content-Type': 'application/json'}
+
 #exchangeratesapi.io API
 exchangerates_base = 'https://api.exchangeratesapi.io/'
 exchangerates_headers = {'Content-Type': 'application/json'}
+
+gemini_base = 'https://api.gemini.com/v1/' #gemini API
 
 #irc functions
 def joinchan(chan): # join channel(s).
@@ -94,6 +112,25 @@ def fx(cur1,cur2,amt):
     except Exception as e:
         senderror(e)
 
+def cycle():
+    try:
+        ticker = requests.get(f'{gemini_base}pubticker/btcusd')
+        ticker.raise_for_status()
+	
+        pricefeed = requests.get(f'{gemini_base}pricefeed')
+        pricefeed.raise_for_status()
+	
+        delta = (float(ticker.json()['last']) - float(cycle_high)) / float(cycle_high) * 100
+        percentChange24h = float(next(i["percentChange24h"] for i in pricefeed.json() if i["pair"] == "BTCUSD")) * 100
+
+        ch_color = red if delta < 0 else green
+        pc24_color = red if percentChange24h < 0 else green
+
+        sendmsg(f'BTC [GEMINI] -> ${float(ticker.json()["last"]):,.2f} | Cycle high: ${float(cycle_high):,.2f} | Delta: {ch_color}{delta:,.2f}%{reset} | Last 24H: {pc24_color}{percentChange24h:,.2f}%{reset}')
+
+    except Exception as e:
+        senderror(str(e))
+
 def main():
   login()
   
@@ -112,6 +149,7 @@ def main():
 
         if message[:5].find('!help') != -1:
           sendmsg("Command List:", name)
+          sendmsg("!cycle                                               - Shows the difference in price from the last high", name)
           sendmsg("!fx <from_currency> <to_currency> <amount>           - Converts from one currency to another", name)
           sendmsg('!help                                                - Show this list', name)
           sendmsg('!tslb                                                - Print time of last block', name)
@@ -135,6 +173,9 @@ def main():
                 fx(from_cur,to_cur,amount)
             except Exception as e:
                 senderror(e)
+
+        if message[:6].find('!cycle') != -1:
+            cycle()
 
       # Commands end
       ##################################################################
