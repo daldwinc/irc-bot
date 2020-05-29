@@ -27,6 +27,14 @@ with open('cycle.json', 'r') as f:
 cycle_high = config['cycle_high']
 start_2020 = config['start_2020']
 
+
+reset = "\x03"
+green = "\x0303"
+red = "\x034"
+yellow = "\x038"
+white = "\x0300"
+
+
 ircsock.connect((server, 6667)) # Here we connect to the server using the port 6667
 ircsock.send(bytes("USER "+ botnick +" "+ botnick +" "+ botnick +" "+ botnick +"\n", "UTF-8")) # user information
 ircsock.send(bytes("NICK "+ botnick +"\n", "UTF-8")) # assign the nick to the bot
@@ -114,7 +122,11 @@ def cycle():
 	
         delta = (float(ticker.json()['last']) - float(cycle_high)) / float(cycle_high) * 100
         percentChange24h = float(next(i["percentChange24h"] for i in pricefeed.json() if i["pair"] == "BTCUSD")) * 100
-        sendmsg(f'BTC [GEMINI] -> ${float(ticker.json()["last"]):,.2f} | Cycle high: ${float(cycle_high):,.2f} | Delta: {delta:,.2f}% | Daily Change: {percentChange24h:,.2f}%')
+
+        ch_color = red if delta < 0 else green
+        pc24_color = red if percentChange24h < 0 else green
+
+        sendmsg(f'BTC [GEMINI] -> ${float(ticker.json()["last"]):,.2f} | Cycle high: ${float(cycle_high):,.2f} | Delta: {ch_color}{delta:,.2f}%{reset} | Daily Change: {pc24_color}{percentChange24h:,.2f}%{reset}')
 
     except Exception as e:
         senderror(str(e))
