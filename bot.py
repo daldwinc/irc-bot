@@ -53,7 +53,7 @@ exchangerates_base = 'https://api.exchangeratesapi.io/'
 exchangerates_headers = {'Content-Type': 'application/json'}
 
 gemini_base = 'https://api.gemini.com/v1/' #gemini API
-
+coincap_base = 'https://api.coincap.io/v2/assets/'
 
 #irc functions
 def joinchan(chan): # join channel(s).
@@ -130,9 +130,20 @@ def cycle():
         pc24_color = reset if percentChange24h < 0 else green
         pcytd_color = reset if ytd_delta < 0 else green
 
-        sendmsg(f'BTC [GEMINI] -> ${float(ticker.json()["last"]):,.2f} / ${float(cycle_high):,.2f} | Cycle/24H/YTD: ({ch_color}{delta:,.2f}%{reset}) ({pc24_color}{percentChange24h:,.2f}%{reset}) ({pcytd_color}{ytd_delta:,.2f}%{reset})') 
+        sendmsg(f'BTC [Gemini] -> ${float(ticker.json()["last"]):,.2f} / ${float(cycle_high):,.2f} | Cycle/24H/YTD: ({ch_color}{delta:,.2f}%{reset}) ({pc24_color}{percentChange24h:,.2f}%{reset}) ({pcytd_color}{ytd_delta:,.2f}%{reset})') 
 
     except Exception as e:
+        senderror(str(e))
+
+def vol():
+    try:
+        coincap = requests.get(f'{coincap_base}bitcoin')
+        coincap.raise_for_status()
+        
+        vol_in_bill = float(coincap.json()['data']['volumeUsd24Hr']) / 1000000000
+        sendmsg(f'BTC [Coincap] -> 24H Volume: ${vol_in_bill:,.2f} billion USD')
+
+    except Exceptions as e:
         senderror(str(e))
 
 
@@ -160,6 +171,10 @@ def main():
           sendmsg('!tslb                                                - Print time of last block', name)
           sendmsg('!losers                                              - Print names of idiots to channel', name)
           sendmsg('!join                                                - attempt to channel', name)
+          sendmsg('!vol                                                 - Show 24 hour BTC volume', name)
+
+        if message[:4].find('!vol') != -1:
+          vol()
 
         if message[:7].find('!join') != -1:
           joinchan(channel)
