@@ -183,7 +183,7 @@ def main():
         if message[:5].find('!help') != -1:
           sendmsg(f'Command List:', name)
           sendmsg(f'!c                                                   - Show change from last high, daily change', name)
-          sendmsg(f'!r <ticker>                                          - Show coin stats from Coincap', name)
+          sendmsg(f'!r <ticker>                                          - Show coin stats from Coincap. BTC is default.', name)
           sendmsg(f'!fx <from_currency> <to_currency> <amount>           - Converts from one currency to another', name)
           sendmsg(f'!help                                                - Show this list', name)
           sendmsg(f'!tslb                                                - Print time of last block', name)
@@ -194,6 +194,8 @@ def main():
         if message[:2].find('!r') != -1:
           try:
             coin = ircmsg.split('PRIVMSG',1)[1].split(':',1)[1].split(' ',1)[1]
+            if not coin:
+              coin = "BTC"
             rank(coin)
           except Exception as e:
             senderror(e)
