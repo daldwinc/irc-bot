@@ -52,7 +52,7 @@ blockchain_headers = {'Content-Type': 'application/json'}
 exchangerates_base = 'https://api.exchangeratesapi.io/'
 exchangerates_headers = {'Content-Type': 'application/json'}
 
-gemini_base = 'https://api.gemini.com/v1/' #gemini API
+gemini_base = 'https://api.gemini.com/v1/'
 coincap_base = 'https://api.coincap.io/v2/assets/'
 
 #irc functions
@@ -81,6 +81,23 @@ def senderror(err=None):
         print("[!] Command failed.")
 
 #trigger functions
+
+def rank(c):
+  try:
+    tickers = requests.get(f'{coincap_base}?limit=500')
+    tickers.raise_for_status()
+
+    asset = next(i["id"] for i in tickers.json()["data"] if i["symbol"] == c.upper())
+
+    coin = requests.get(f'{coincap_base}{asset}')    
+    coin.raise_for_status()
+
+    ch_color = reset if float(coin.json()["data"]["changePercent24Hr"]) < 0 else green
+    sendmsg(f'{coin.json()["data"]["name"]} [CoinCap] -> ${float(coin.json()["data"]["priceUsd"]):,.2f} ({ch_color}{float(coin.json()["data"]["changePercent24Hr"]):,.2f}%{reset}) | volume: ${float(coin.json()["data"]["volumeUsd24Hr"]):,.2f} | rank: {coin.json()["data"]["rank"]}')
+
+  except Exception as e:
+    senderror(str(e))
+
 def tslb():
     api_url = '{0}latestblock'.format(blockchain_base)
     r = requests.get(api_url, headers=blockchain_headers)
@@ -143,7 +160,7 @@ def vol():
         vol_in_bill = float(coincap.json()['data']['volumeUsd24Hr']) / 1000000000
         sendmsg(f'BTC [Coincap] -> 24H Volume: ${vol_in_bill:,.2f} billion USD')
 
-    except Exceptions as e:
+    except Exception as e:
         senderror(str(e))
 
 
@@ -164,14 +181,24 @@ def main():
        # Commands go here
 
         if message[:5].find('!help') != -1:
-          sendmsg("Command List:", name)
-          sendmsg("!c                                                   - Show change from last high, daily change", name)
-          sendmsg("!fx <from_currency> <to_currency> <amount>           - Converts from one currency to another", name)
-          sendmsg('!help                                                - Show this list', name)
-          sendmsg('!tslb                                                - Print time of last block', name)
-          sendmsg('!losers                                              - Print names of idiots to channel', name)
-          sendmsg('!join                                                - attempt to channel', name)
-          sendmsg('!vol                                                 - Show 24 hour BTC volume', name)
+          sendmsg(f'Command List:', name)
+          sendmsg(f'!c                                                   - Show change from last high, daily change', name)
+          sendmsg(f'!r <ticker>                                          - Show coin stats from Coincap. BTC is default.', name)
+          sendmsg(f'!fx <from_currency> <to_currency> <amount>           - Converts from one currency to another', name)
+          sendmsg(f'!help                                                - Show this list', name)
+          sendmsg(f'!tslb                                                - Print time of last block', name)
+          sendmsg(f'!losers                                              - Print names of idiots to channel', name)
+          sendmsg(f'!join                                                - attempt to channel', name)
+          sendmsg(f'!vol                                                 - Show 24 hour BTC volume', name)
+
+        if message[:2].find('!r') != -1:
+          try:
+            coin = ircmsg.split('PRIVMSG',1)[1].split(':',1)[1].split(' ',1)[1]
+            if not coin:
+              coin = "BTC"
+            rank(coin)
+          except Exception as e:
+            senderror(e)
 
         if message[:4].find('!vol') != -1:
           vol()
