@@ -53,6 +53,7 @@ exchangerates_base = 'https://api.exchangeratesapi.io/'
 exchangerates_headers = {'Content-Type': 'application/json'}
 
 gemini_base = 'https://api.gemini.com/v1/'
+gemini_base2 = 'https://api.gemini.com/v2/'
 coincap_base = 'https://api.coincap.io/v2/assets/'
 
 #irc functions
@@ -135,19 +136,20 @@ def cycle():
     try:
         ticker = requests.get(f'{gemini_base}pubticker/btcusd')
         ticker.raise_for_status()
-	
+  
         pricefeed = requests.get(f'{gemini_base}pricefeed')
         pricefeed.raise_for_status()
 
-        delta = (float(ticker.json()['last']) - float(cycle_high)) / float(cycle_high) * 100
-        percentChange24h = float(next(i["percentChange24h"] for i in pricefeed.json() if i["pair"] == "BTCUSD")) * 100
-        ytd_delta = (float(ticker.json()['last']) - float(start_2020)) / float(start_2020) * 100
-        
-        ch_color = reset if delta < 0 else green
-        pc24_color = reset if percentChange24h < 0 else green
-        pcytd_color = reset if ytd_delta < 0 else green
+        high = requests.get(f'{gemini_base2}/ticker/btcusd')
+        high.raise_for_status()
 
-        sendmsg(f'BTC [Gemini] -> ${float(ticker.json()["last"]):,.2f} / ${float(cycle_high):,.2f} | Cycle/24H/YTD: ({ch_color}{delta:,.2f}%{reset}) ({pc24_color}{percentChange24h:,.2f}%{reset}) ({pcytd_color}{ytd_delta:,.2f}%{reset})') 
+        stop = (float(ticker.json()['last'])) * 0.9
+
+        percentChange24h = float(next(i["percentChange24h"] for i in pricefeed.json() if i["pair"] == "BTCUSD")) * 100
+        
+        pc24_color = reset if percentChange24h < 0 else green
+
+        sendmsg(f'BTC [Gemini] -> ${float(ticker.json()["last"]):,.2f} ({pc24_color}{percentChange24h:,.2f}%{reset}) | All-Time High: ${float(high.json()["high"]):,.2f} | Stop: ${float(stop):,.2f} (-10%)') 
 
     except Exception as e:
         senderror(str(e))
