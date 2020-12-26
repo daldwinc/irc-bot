@@ -143,7 +143,7 @@ def cycle():
         high = requests.get(f'{gemini_base2}/ticker/btcusd')
         high.raise_for_status()
 
-        stop = (float(ticker.json()['last'])) * 0.9
+        stop = (float(high.json()['high'])) * 0.9
 
         percentChange24h = float(next(i["percentChange24h"] for i in pricefeed.json() if i["pair"] == "BTCUSD")) * 100
         
