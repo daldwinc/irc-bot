@@ -24,9 +24,7 @@ exitcode = config['exitcode'] + botnick
 with open('cycle.json', 'r') as f:
     config = json.load(f)
 
-cycle_high = config['cycle_high']
-start_2020 = config['start_2020']
-
+last_high = float(config['cycle_high'])
 
 reset = "\x03"
 green = "\x0303"
@@ -143,11 +141,20 @@ def cycle():
         high = requests.get(f'{gemini_base2}/ticker/btcusd')
         high.raise_for_status()
 
-        stop = (float(high.json()['high'])) * 0.9
+        sendmsg(f'From file: ${last_high}')
+
+        this_high = (float(high.json()['high']))
+        new_high = this_high if this_high > last_high else last_high
+
+        sendmsg(f'Update - This high: ${this_high} and last high: ${new_high} ')
+
+        stop = (float(new_high) * 0.9
 
         percentChange24h = float(next(i["percentChange24h"] for i in pricefeed.json() if i["pair"] == "BTCUSD")) * 100
         
         pc24_color = reset if percentChange24h < 0 else green
+
+        sendmsg(f'From file: last_high')
 
         sendmsg(f'BTC [Gemini] -> ${float(ticker.json()["last"]):,.2f} ({pc24_color}{percentChange24h:,.2f}%{reset}) | All-Time High: ${float(high.json()["high"]):,.2f} | Stop: ${float(stop):,.2f} (-10%)') 
 
