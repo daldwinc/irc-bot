@@ -151,15 +151,16 @@ def cycle():
 
         if new_high > last_high:
           stop = (float(new_high)) * 0.9
+          ath = new_high
         else:
+          ath = last_high
           stop = (float(last_high)) * 0.9
-
 
         percentChange24h = float(next(i["percentChange24h"] for i in pricefeed.json() if i["pair"] == "BTCUSD")) * 100
         
         pc24_color = reset if percentChange24h < 0 else green
 
-        sendmsg(f'BTC [Gemini] -> ${float(ticker.json()["last"]):,.2f} ({pc24_color}{percentChange24h:,.2f}%{reset}) | All-Time High: ${new_high:,.2f} | Stop: ${float(stop):,.2f} (-10%)') 
+        sendmsg(f'BTC [Gemini] -> ${float(ticker.json()["last"]):,.2f} ({pc24_color}{percentChange24h:,.2f}%{reset}) | All-Time High: ${ath:,.2f} | Stop: ${float(stop):,.2f} (-10%)') 
 
     except Exception as e:
         senderror(str(e))
