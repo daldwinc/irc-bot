@@ -27,7 +27,6 @@ with open('cycle.json', 'r') as f:
 last_high = float(config['cycle_high'])
 
 new_high = 0
-this_high = 0
 
 reset = "\x03"
 green = "\x0303"
@@ -134,7 +133,8 @@ def fx(cur1,cur2,amt):
 
 
 def cycle():
-    try:
+  global new_high
+  #  try:
         ticker = requests.get(f'{gemini_base}pubticker/btcusd')
         ticker.raise_for_status()
   
@@ -157,8 +157,8 @@ def cycle():
 
         sendmsg(f'BTC [Gemini] -> ${float(ticker.json()["last"]):,.2f} ({pc24_color}{percentChange24h:,.2f}%{reset}) | All-Time High: ${new_high:,.2f} | Stop: ${float(stop):,.2f} (-10%)') 
 
-    except Exception as e:
-        senderror(str(e))
+#    except Exception as e:
+ #       senderror(str(e))
 
 def vol():
     try:
