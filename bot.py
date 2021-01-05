@@ -154,8 +154,6 @@ def cycle():
         
         pc24_color = reset if percentChange24h < 0 else green
 
-        sendmsg(f'From file: last_high')
-
         sendmsg(f'BTC [Gemini] -> ${float(ticker.json()["last"]):,.2f} ({pc24_color}{percentChange24h:,.2f}%{reset}) | All-Time High: ${float(high.json()["high"]):,.2f} | Stop: ${float(stop):,.2f} (-10%)') 
 
     except Exception as e:
