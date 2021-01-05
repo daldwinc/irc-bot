@@ -141,8 +141,6 @@ def cycle():
         high = requests.get(f'{gemini_base2}/ticker/btcusd')
         high.raise_for_status()
 
-        sendmsg(f'From file: ${last_high}')
-
         this_high = (float(high.json()['high']))
 
         if this_high > new_high:
