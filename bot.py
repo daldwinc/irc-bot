@@ -26,6 +26,7 @@ with open('cycle.json', 'r') as f:
 
 last_high = float(config['cycle_high'])
 new_high = 0
+this_high = 0
 
 reset = "\x03"
 green = "\x0303"
