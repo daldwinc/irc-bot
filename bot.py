@@ -149,7 +149,11 @@ def cycle():
         if this_high > last_high:
           new_high = this_high
 
-        stop = (float(new_high)) * 0.9
+        if new_high > last_high:
+          stop = (float(new_high)) * 0.9
+        else:
+          stop = (float(last_high)) * 0.9
+
 
         percentChange24h = float(next(i["percentChange24h"] for i in pricefeed.json() if i["pair"] == "BTCUSD")) * 100
         
