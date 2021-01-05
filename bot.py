@@ -25,6 +25,9 @@ with open('cycle.json', 'r') as f:
     config = json.load(f)
 
 last_high = float(config['cycle_high'])
+global new_high
+global this_high
+
 new_high = 0
 this_high = 0
 
