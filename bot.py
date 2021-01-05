@@ -133,7 +133,7 @@ def fx(cur1,cur2,amt):
         senderror(e)
 
 
-def cycle(new_high):
+def cycle():
     try:
         ticker = requests.get(f'{gemini_base}pubticker/btcusd')
         ticker.raise_for_status()
@@ -230,7 +230,7 @@ def main():
                 senderror(e)
 
         if message[:2].find('!c') != -1:
-            cycle(new_high)
+            cycle()
 
       # Commands end
       ##################################################################
