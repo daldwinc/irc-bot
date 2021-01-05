@@ -144,8 +144,7 @@ def cycle():
 
         this_high = (float(high.json()['high']))
 
-        if this_high > new_high:
-          last_high = new_high
+        if this_high > last_high:
           new_high = this_high
 
         sendmsg(f'Update - This high: ${this_high:,.2f} - last high: ${last_high:,.2f} - all-time high: ${new_high:,.2f} ')
