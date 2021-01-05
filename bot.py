@@ -133,8 +133,8 @@ def fx(cur1,cur2,amt):
 
 
 def cycle():
-  global new_high
     try:
+        global new_high
         ticker = requests.get(f'{gemini_base}pubticker/btcusd')
         ticker.raise_for_status()
   
