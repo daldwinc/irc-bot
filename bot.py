@@ -150,7 +150,7 @@ def cycle():
           new_high = this_high
 
         if new_high > ath:
-        ath = new_high
+          ath = new_high
 
         stop = (float(ath)) * 0.9
 
