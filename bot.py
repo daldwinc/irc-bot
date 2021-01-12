@@ -152,7 +152,8 @@ def cycle():
         future = requests.get(f'{cme_base}/8478/G')
         future.raise_for_status()
 
-        sendmsg(f'Future: ${future.json()["last"]}')
+        futures_price = float(future.json()['quotes']['last'])
+        sendmsg(f'Future: ${futures_price}')
 
         this_high = (float(high.json()['high']))
 
