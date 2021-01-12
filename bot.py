@@ -28,6 +28,7 @@ ath = float(config['cycle_high'])
 new_high = 0
 
 reset = "\x03"
+blue = "\x0302"
 green = "\x0303"
 red = "\x034"
 yellow = "\x038"
@@ -150,9 +151,7 @@ def cycle():
         future = requests.get(f'{cme_base}/8478/G')
         future.raise_for_status()
 
-        future_price = next(i["last"] for i in future.json()["quotes"] if i["isFrontMonth"])
-
-        sendmsg(f'Future: ${future_price}')
+        future_price = float(next(i["last"] for i in future.json()["quotes"] if i["isFrontMonth"]))
 
         this_high = (float(high.json()['high']))
 
@@ -168,7 +167,7 @@ def cycle():
         
         pc24_color = reset if percentChange24h < 0 else green
 
-        sendmsg(f'BTC [Gemini] -> ${float(ticker.json()["last"]):,.2f} ({pc24_color}{percentChange24h:,.2f}%{reset}) | All-Time High: ${ath:,.2f} | Stop: ${float(stop):,.2f} (-10%)') 
+        sendmsg(f'BTC [Gemini/CME] -> ${float(ticker.json()["last"]):,.2f} ({pc24_color}{percentChange24h:,.2f}%{reset}) ({blue}${future_price:,.2f}%{reset}) | All-Time High: ${ath:,.2f} | Stop: ${float(stop):,.2f} (-10%)') 
 
     except Exception as e:
         senderror(str(e))
