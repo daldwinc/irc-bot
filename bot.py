@@ -137,7 +137,7 @@ def fx(cur1,cur2,amt):
 
 
 def cycle():
-    try:
+    #try:
         global new_high
         global ath
         ticker = requests.get(f'{gemini_base}pubticker/btcusd')
@@ -171,8 +171,8 @@ def cycle():
 
         sendmsg(f'BTC [Gemini] -> ${float(ticker.json()["last"]):,.2f} ({pc24_color}{percentChange24h:,.2f}%{reset}) | All-Time High: ${ath:,.2f} | Stop: ${float(stop):,.2f} (-10%)') 
 
-    except Exception as e:
-        senderror(str(e))
+    #except Exception as e:
+     #   senderror(str(e))
 
 def vol():
     try:
