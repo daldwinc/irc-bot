@@ -149,8 +149,8 @@ def cycle():
         high = requests.get(f'{gemini_base2}/ticker/btcusd')
         high.raise_for_status()
 
-        future = requests.get(f'{cme_base}/8478/G')
-        future.raise_for_status()
+        #future = requests.get(f'{cme_base}/8478/G')
+        #future.raise_for_status()
 
         #future_price = next(i["last"] for i in future.json()["quotes"] if i["isFrontMonth"])
 
