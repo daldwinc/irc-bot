@@ -32,6 +32,7 @@ green = "\x0303"
 red = "\x034"
 yellow = "\x038"
 white = "\x0300"
+blue = "\x0302"
 
 
 ircsock.connect((server, 6667)) # Here we connect to the server using the port 6667
@@ -50,6 +51,10 @@ blockchain_headers = {'Content-Type': 'application/json'}
 #exchangeratesapi.io API
 exchangerates_base = 'https://api.exchangeratesapi.io/'
 exchangerates_headers = {'Content-Type': 'application/json'}
+
+#cme futures fake API
+cme_base = 'https://www.cmegroup.com/CmeWS/mvc/Quotes/Future'
+cme_headers = {'Content-Type': 'application/json'}
 
 gemini_base = 'https://api.gemini.com/v1/'
 gemini_base2 = 'https://api.gemini.com/v2/'
@@ -143,6 +148,11 @@ def cycle():
 
         high = requests.get(f'{gemini_base2}/ticker/btcusd')
         high.raise_for_status()
+
+        future = requests.get(f'{cme_base}/8478/G')
+        future.raise_for_status()
+
+        sendmsg(f'Future: ${future.json()["last"]}')
 
         this_high = (float(high.json()['high']))
 
