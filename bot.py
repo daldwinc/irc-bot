@@ -50,6 +50,10 @@ blockchain_headers = {'Content-Type': 'application/json'}
 exchangerates_base = 'https://api.exchangeratesapi.io/'
 exchangerates_headers = {'Content-Type': 'application/json'}
 
+#cme futures fake API
+cme_base = 'https://www.cmegroup.com/CmeWS/mvc/Quotes/Future'
+cme_headers = {'Content-Type': 'application/json'}
+
 gemini_base = 'https://api.gemini.com/v1/'
 gemini_base2 = 'https://api.gemini.com/v2/'
 coincap_base = 'https://api.coincap.io/v2/assets/'
@@ -142,6 +146,13 @@ def cycle():
 
         high = requests.get(f'{gemini_base2}/ticker/btcusd')
         high.raise_for_status()
+
+        future = requests.get(f'{cme_base}/8478/G')
+        future.raise_for_status()
+
+        future_price = next(i["last"] for i in future.json()["quotes"] if i["isFrontMonth"])
+
+        sendmsg(f'Future: ${future_price}')
 
         this_high = (float(high.json()['high']))
 
