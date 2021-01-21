@@ -169,7 +169,7 @@ def cycle():
         pc24_color = reset if percentChange24h < 0 else green
         pcath_color = reset if percent_of_ath < 0 else green
 
-        sendmsg(f'BTC [Gemini/CME] -> ${float(ticker.json()["last"]):,.2f} ({pc24_color}{percentChange24h:,.2f}%{reset} 24H) (F: {blue}${future_price:,.2f}{reset}) | All-Time High: ${ath:,.2f} ({pcath_color}{percent_of_ath:,.2f}%{reset}) | Stop: ${float(stop):,.2f} (-10%)') 
+        sendmsg(f'BTC [Gemini/CME] -> ${float(ticker.json()["last"]):,.2f} ({pc24_color}{percentChange24h:,.2f}%{reset} 24H) (F: {blue}${future_price:,.2f}{reset}) | All-Time High: ${ath:,.2f} ({pcath_color}{percent_of_ath:,.2f}%{reset}) | ATH Stop: ${float(stop):,.2f} (-10%)') 
 
     except Exception as e:
         senderror(str(e))
@@ -193,6 +193,11 @@ def main():
     ircmsg = ircsock.recv(2048).decode("UTF-8")
     ircmsg = ircmsg.strip('\n\r')
     print(ircmsg)
+
+    now = datetime.now()
+    current_time = now.strftime("%M")
+    if current_time == "15" or "30" or "45" or "00":
+      cycle()
 
     if ircmsg.find("PRIVMSG") != -1:
       name = ircmsg.split('!',1)[0][1:]
