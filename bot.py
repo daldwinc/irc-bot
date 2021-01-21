@@ -4,7 +4,7 @@
 import socket
 import requests
 import json
-import datetime
+from datetime import datetime
 import time
 
 #irc basics
