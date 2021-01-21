@@ -163,7 +163,7 @@ def cycle():
 
         stop = (float(ath)) * 0.9
 
-        percent_of_ath = ${float(ticker.json()["last"])} / ath - 1
+        percent_of_ath = float(ticker.json()["last"]) / ath - 1
         percentChange24h = float(next(i["percentChange24h"] for i in pricefeed.json() if i["pair"] == "BTCUSD")) * 100
         
         pc24_color = reset if percentChange24h < 0 else green
