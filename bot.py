@@ -188,15 +188,17 @@ def vol():
 
 def main():
   login()
+
+  FIFTEEN_MINS = timedelta(seconds=60*15)
+  last_run = datetime.now() - FIFTEEN_MINS
   
   while 1:
     ircmsg = ircsock.recv(2048).decode("UTF-8")
     ircmsg = ircmsg.strip('\n\r')
     print(ircmsg)
 
-    now = datetime.now()
-    current_time = now.strftime("%M%S")
-    if current_time in ['0000', '1500', '3000', '4500']:
+    if datetime.now() - last_run > FIFTEEN_MINS:
+      last_run = datetime.now()
       cycle()
 
     if ircmsg.find("PRIVMSG") != -1:
