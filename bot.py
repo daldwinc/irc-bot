@@ -6,6 +6,7 @@ import requests
 import json
 import datetime
 import time
+from datetime import timedelta
 
 #irc basics
 ircsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
