@@ -195,8 +195,8 @@ def main():
     print(ircmsg)
 
     now = datetime.now()
-    current_time = now.strftime("%M")
-    if current_time == "15" or "30" or "45" or "00":
+    current_time = now.strftime("%M%S")
+    if current_time in ['0000', '1500', '3000', '4500']:
       cycle()
 
     if ircmsg.find("PRIVMSG") != -1:
