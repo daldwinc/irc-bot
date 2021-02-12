@@ -112,7 +112,7 @@ def satoshi(sats):
         value = (float(ticker.json()["last"])) * (float(sats) / 100000000)
         btc = (float(sats) / 100000000)
 
-        sendmsg(f'At a rate of ${float(ticker.json()["last"]):,.2f}, {sats} satoshi or {btc:.8f} BTC is ${value:,.4f}')
+        sendmsg(f'At a rate of ${float(ticker.json()["last"]):,.2f}, {sats} satoshi or {btc:.8g} BTC is ${value:,.4f}')
 
     except Exception as e:
       senderror(str(e))
