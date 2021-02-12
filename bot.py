@@ -109,10 +109,10 @@ def satoshi(sats):
         ticker = requests.get(f'{gemini_base}pubticker/btcusd')
         ticker.raise_for_status()
 
-        value = (float(ticker.json()["last"])) * sats
+        value = (float(ticker.json()["last"])) * (sats / 10000000)
         sendmsg(f'At a BTC price of ${float(ticker.json()["last"]):,.2f}, $sats satoshi is ${value:,.2f}')
 
-  except Exception as e:
+    except Exception as e:
     senderror(str(e))
 
 def fx(cur1,cur2,amt):
