@@ -248,7 +248,7 @@ def main():
             cycle()
 
         if message[:3].find('!s ') != -1:
-            satoshi()
+            satoshi(sats)
 
       # Commands end
       ##################################################################
