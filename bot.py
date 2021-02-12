@@ -104,21 +104,16 @@ def rank(c):
   except Exception as e:
     senderror(str(e))
 
-def tslb():
-    api_url = '{0}latestblock'.format(blockchain_base)
-    r = requests.get(api_url, headers=blockchain_headers)
-    if r.status_code == 200:
-        d = json.loads(r.content.decode('UTF-8'))
-        if d is not None:
-            last_time = int(d['time'])
-            current_time = int(time.time())
-            time_diff = current_time - last_time
-            seconds_to_time = str(datetime.timedelta(seconds=time_diff))
-            sendmsg("Time elapsed since last block: " + seconds_to_time)
-        else:
-            senderror()
-    else:
-        senderror()
+def satoshi(sats):
+    try:
+        ticker = requests.get(f'{gemini_base}pubticker/btcusd')
+        ticker.raise_for_status()
+
+        value = (float(ticker.json()["last"])) * sats
+        sendmsg(f'At a BTC price of ${float(ticker.json()["last"]):,.2f}, $sats satoshi is ${value:,.2f}')
+
+  except Exception as e:
+    senderror(str(e))
 
 def fx(cur1,cur2,amt):
     try:
@@ -240,9 +235,6 @@ def main():
         if message[:7].find('!losers') != -1:
           sendmsg("Roger Ver, Craig Wright, Calvin Ayr")
 
-        if message[:5].find('!tslb') != -1:
-          tslb()
-
         if message[:3].find('!fx') != -1:
             try:
                 from_cur = ircmsg.split('PRIVMSG',1)[1].split(':',1)[1].split(' ',3)[1].upper()
@@ -254,6 +246,9 @@ def main():
 
         if message[:2].find('!c') != -1:
             cycle()
+
+        if message[:3].find('!s ') != -1:
+            satoshi()
 
       # Commands end
       ##################################################################
