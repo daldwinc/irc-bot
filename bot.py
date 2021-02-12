@@ -248,6 +248,11 @@ def main():
             cycle()
 
         if message[:3].find('!s ') != -1:
+          try:
+            sats = ircmsg.split('PRIVMSG',1)[1].split(':',1)[1].split(' ',3)[1]
+            satoshi(sats)
+          except:
+            sats = 1
             satoshi(sats)
 
       # Commands end
