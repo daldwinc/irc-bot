@@ -113,7 +113,7 @@ def satoshi(sats):
         sendmsg(f'At a BTC price of ${float(ticker.json()["last"]):,.2f}, $sats satoshi is ${value:,.2f}')
 
     except Exception as e:
-    senderror(str(e))
+      senderror(str(e))
 
 def fx(cur1,cur2,amt):
     try:
