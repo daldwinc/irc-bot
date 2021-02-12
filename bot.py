@@ -251,7 +251,7 @@ def main():
         if message[:2].find('!c') != -1:
             cycle()
 
-        if message[:2].find('!s') != -1:
+        if message[:3].find('!s ') != -1:
           sats = ircmsg.split('PRIVMSG',1)[1].split(':',1)[1].split(' ',3)[1]
           satoshi(sats)
 
