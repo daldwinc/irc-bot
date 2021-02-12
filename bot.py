@@ -196,7 +196,7 @@ def main():
 
     if datetime.now() - last_run > FIFTEEN_MINS:
       last_run = datetime.now()
-      cycle()
+      #cycle() - removed until I can make it less chatty
 
     if ircmsg.find("PRIVMSG") != -1:
       name = ircmsg.split('!',1)[0][1:]
