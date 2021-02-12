@@ -109,7 +109,7 @@ def satoshi(sats):
         ticker = requests.get(f'{gemini_base}pubticker/btcusd')
         ticker.raise_for_status()
 
-        sat = 1 if sats is None else sats
+        print(sats)
 
         value = (float(ticker.json()["last"])) * (float(sats) / 100000000)
         sendmsg(f'At a BTC price of ${float(ticker.json()["last"]):,.2f}, ${sats} satoshi is ${value:,.2f}')
