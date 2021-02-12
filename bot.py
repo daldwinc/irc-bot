@@ -109,8 +109,11 @@ def satoshi(sats):
         ticker = requests.get(f'{gemini_base}pubticker/btcusd')
         ticker.raise_for_status()
 
-        value = (float(ticker.json()["last"])) * (float(sats) / 10000000)
-        sendmsg(f'At a BTC price of ${float(ticker.json()["last"]):,.2f}, $sats satoshi is ${value:,.2f}')
+        if sats is None:
+          sats = 1
+
+        value = (float(ticker.json()["last"])) * (float(sats) / 100000000)
+        sendmsg(f'At a BTC price of ${float(ticker.json()["last"]):,.2f}, ${sats} satoshi is ${value:,.2f}')
 
     except Exception as e:
       senderror(str(e))
@@ -248,12 +251,8 @@ def main():
             cycle()
 
         if message[:3].find('!s ') != -1:
-          try:
-            sats = ircmsg.split('PRIVMSG',1)[1].split(':',1)[1].split(' ',3)[1]
-            satoshi(sats)
-          except:
-            sats = 1
-            satoshi(sats)
+          sats = ircmsg.split('PRIVMSG',1)[1].split(':',1)[1].split(' ',3)[1]
+          satoshi(sats)
 
       # Commands end
       ##################################################################
