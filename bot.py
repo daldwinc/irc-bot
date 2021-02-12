@@ -111,7 +111,7 @@ def satoshi(sats):
 
         if sats is not None:
           value = (float(ticker.json()["last"])) * (float(sats) / 100000000)
-        else
+        else:
           value = (float(ticker.json()["last"])) * (1 / 100000000)
 
         sendmsg(f'At a BTC price of ${float(ticker.json()["last"]):,.2f}, {sats} satoshi is ${value:,.4f}')
