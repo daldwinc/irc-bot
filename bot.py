@@ -55,7 +55,7 @@ exchangerates_headers = {'Content-Type': 'application/json'}
 
 #cme futures fake API
 cme_base = 'https://www.cmegroup.com/CmeWS/mvc/Quotes/Future'
-cme_headers = {'Content-Type': 'application/json'}
+cme_headers = {'Content-Type': 'application/json', 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 11_2_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.72 Safari/537.36'}
 
 gemini_base = 'https://api.gemini.com/v1/'
 gemini_base2 = 'https://api.gemini.com/v2/'
